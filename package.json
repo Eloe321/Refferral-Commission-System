@@ -1,0 +1,45 @@
+{
+  "name": "referral-commission-sandbox",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.17.1",
+  "engines": {
+    "node": ">=24.15 <25"
+  },
+  "scripts": {
+    "build": "pnpm -r --if-present build",
+    "dev": "pnpm --parallel --filter @referral-sandbox/contracts --filter @referral-sandbox/database --filter @referral-sandbox/api --filter @referral-sandbox/web dev",
+    "lint": "eslint eslint.config.mjs vitest.workspace.ts playwright.config.ts apps/api/vitest.e2e.config.ts scripts/*.mjs tests/e2e/**/*.ts && pnpm -r --if-present lint",
+    "typecheck": "pnpm -r --if-present typecheck && pnpm typecheck:e2e",
+    "typecheck:e2e": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm test:unit && pnpm test:integration && pnpm test:api-e2e",
+    "test:unit": "vitest run --config vitest.workspace.ts --project unit",
+    "test:integration": "vitest run --config vitest.workspace.ts --project integration",
+    "test:api-e2e": "pnpm --filter @referral-sandbox/api test:e2e",
+    "test:e2e": "node --test scripts/run-playwright.test.mjs && docker compose down && node scripts/run-playwright.mjs",
+    "db:generate": "pnpm --filter @referral-sandbox/database db:generate",
+    "db:migrate": "pnpm --filter @referral-sandbox/database db:migrate",
+    "db:seed": "pnpm --filter @referral-sandbox/database db:seed",
+    "privacy:check": "node --test scripts/privacy-check.test.mjs && node scripts/privacy-check.mjs",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm privacy:check && pnpm test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@playwright/test": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitest/coverage-v8": "latest",
+    "eslint": "latest",
+    "jsdom": "latest",
+    "msw": "latest",
+    "prettier": "latest",
+    "tsx": "latest",
+    "typescript": "6.0.3",
+    "typescript-eslint": "latest",
+    "vitest": "latest"
+  }
+}

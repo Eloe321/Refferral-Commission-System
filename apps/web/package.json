@@ -1,0 +1,29 @@
+{
+  "name": "@referral-sandbox/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @referral-sandbox/contracts build && next dev",
+    "build": "pnpm --filter @referral-sandbox/contracts build && next build",
+    "start": "next start",
+    "typecheck": "pnpm --filter @referral-sandbox/contracts build && tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@fontsource/barlow-condensed": "latest",
+    "@fontsource/manrope": "latest",
+    "@radix-ui/react-dropdown-menu": "latest",
+    "@referral-sandbox/contracts": "workspace:*",
+    "@referral-sandbox/ui": "workspace:*",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-qr-code": "latest",
+    "lucide-react": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "latest",
+    "tailwindcss": "latest"
+  }
+}

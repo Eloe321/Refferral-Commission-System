@@ -1,0 +1,10 @@
+.env
+.env.local
+node_modules/
+.next/
+dist/
+coverage/
+.privacy-denylist.local
+test-results/
+playwright-report/
+blob-report/

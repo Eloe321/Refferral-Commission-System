@@ -1,0 +1,101 @@
+name: referral-commission-sandbox
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: referral_sandbox
+      POSTGRES_USER: sandbox
+      POSTGRES_PASSWORD: sandbox
+    ports:
+      - "5432:5432"
+    volumes:
+      - referral-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sandbox -d referral_sandbox"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      APP_MODE: sandbox
+      PORT: 4000
+      WEB_ORIGIN: http://localhost:3000
+      DATABASE_URL: postgres://sandbox:sandbox@postgres:5432/referral_sandbox
+      SESSION_SECRET: ${SESSION_SECRET:-development-session-secret-at-least-32-characters}
+      OTP_HMAC_SECRET: ${OTP_HMAC_SECRET:-development-otp-secret-at-least-32-characters}
+      SMS_DELIVERY_MODE: ${SMS_DELIVERY_MODE:-preview}
+      UNISMS_API_KEY: ${UNISMS_API_KEY:-replace_me}
+      UNISMS_SENDER_ID: ${UNISMS_SENDER_ID:-replace_me}
+      UNISMS_WEBHOOK_SECRET: ${UNISMS_WEBHOOK_SECRET:-replace_me}
+      UNISMS_WEBHOOK_BODY_LIMIT_BYTES: ${UNISMS_WEBHOOK_BODY_LIMIT_BYTES:-16384}
+      EMAIL_DELIVERY_MODE: ${EMAIL_DELIVERY_MODE:-mailpit}
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      MAILPIT_WEB_URL: http://localhost:8025
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        API_PROXY_TARGET: http://api:4000
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:4000
+    environment:
+      API_PROXY_TARGET: http://api:4000
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:4000
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+volumes:
+  referral-postgres:

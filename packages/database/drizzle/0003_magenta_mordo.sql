@@ -1,0 +1,1 @@
+CREATE INDEX "otp_partner_status_resend_idx" ON "otp_challenges" USING btree ("organization_id","partner_id","status","resend_after");

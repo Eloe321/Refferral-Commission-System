@@ -1,0 +1,37 @@
+{
+  "name": "@referral-sandbox/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @referral-sandbox/contracts build && pnpm --filter @referral-sandbox/database build && exec tsx watch src/main.ts",
+    "build": "pnpm --filter @referral-sandbox/contracts build && pnpm --filter @referral-sandbox/database build && nest build",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src test",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "latest",
+    "@nestjs/core": "latest",
+    "@nestjs/platform-express": "latest",
+    "@referral-sandbox/contracts": "workspace:*",
+    "@referral-sandbox/database": "workspace:*",
+    "cookie-parser": "latest",
+    "express": "latest",
+    "helmet": "latest",
+    "nodemailer": "latest",
+    "postgres": "latest",
+    "reflect-metadata": "latest",
+    "rxjs": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "latest",
+    "@nestjs/testing": "latest",
+    "@types/cookie-parser": "latest",
+    "@types/express": "latest",
+    "@types/nodemailer": "latest",
+    "@types/supertest": "latest",
+    "supertest": "latest"
+  }
+}

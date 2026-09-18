@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@referral-sandbox/contracts": ["../../packages/contracts/dist/index"],
+      "@referral-sandbox/contracts/*": ["../../packages/contracts/dist/*"],
+      "@referral-sandbox/ui": ["../../packages/ui/src/index.ts"],
+      "@referral-sandbox/ui/*": ["../../packages/ui/src/*"]
+    },
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", ".next"]
+}

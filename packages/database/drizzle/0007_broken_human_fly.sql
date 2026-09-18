@@ -1,0 +1,2 @@
+ALTER TABLE "claims" ADD COLUMN "otp_challenge_id" uuid;--> statement-breakpoint
+ALTER TABLE "claims" ADD CONSTRAINT "claims_org_otp_challenge_fk" FOREIGN KEY ("organization_id","otp_challenge_id") REFERENCES "public"."otp_challenges"("organization_id","id") ON DELETE no action ON UPDATE no action;

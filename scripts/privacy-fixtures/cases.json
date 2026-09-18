@@ -1,0 +1,10 @@
+{
+  "denylistParts": ["PRIVATE_", "PRODUCT_", "SENTINEL"],
+  "secretKeyParts": ["SERVICE_", "ACCESS_", "TOKEN"],
+  "secretValueParts": ["prod", "value", "93fca82d1f0e"],
+  "unismsKeyParts": ["UNI", "SMS_API_KEY"],
+  "unismsValueParts": ["paid", "account", "value", "4cf9b1"],
+  "emailParts": ["operator", "customer-business", "co"],
+  "phoneParts": ["+63", "917", "123", "4567"],
+  "binaryBytes": [0, 1, 2, 3]
+}
