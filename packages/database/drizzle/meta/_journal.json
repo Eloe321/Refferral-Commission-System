@@ -57,6 +57,13 @@
       "when": 1789532695852,
       "tag": "0007_broken_human_fly",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790127931723,
+      "tag": "0008_crazy_blink",
+      "breakpoints": true
     }
   ]
 }

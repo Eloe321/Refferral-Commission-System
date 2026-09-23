@@ -4,3 +4,4 @@ export * from "./conversions.js";
 export * from "./claims.js";
 export * from "./notifications.js";
 export * from "./operations.js";
+export * from "./bookings.js";

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { commissionRuleSchema, programSchema } from "@referral-sandbox/contracts";
+import { commissionRuleSchema, previewCommissionSchema, programSchema, referralCodeSchema } from "@referral-sandbox/contracts";
 import { createDatabaseClient, NORTHSTAR_IDS } from "../../../../packages/database/src/index.js";
 import { ProgramsService } from "../../src/programs/programs.service.js";
 import { AuditService } from "../../src/common/audit.service.js";
@@ -173,5 +173,33 @@ describe("program and rule contracts", () => {
     expect(
       programSchema.parse(await service.state(actor, foreignProgram, "paused", "Euro pause")).rules,
     ).toEqual(created);
+  });
+  it("lets only the owner create a program and assign a unique referral code", async () => {
+    const owner = await ownerAgent(app);
+    const partner = await partnerAgent(app);
+    await partner.post("/programs").send({ name: "New service line" }).expect(403);
+    const program = programSchema.parse((await owner.post("/programs").send({ name: "New service line" }).expect(201)).body);
+    expect(program).toMatchObject({ name: "New service line", status: "active", rules: [] });
+    const path = `/programs/${program.id}/codes`;
+    const code = referralCodeSchema.parse((await owner.post(path).send({ partnerId: NORTHSTAR_IDS.partners.jamie, code: "NEWLINE42" }).expect(201)).body);
+    expect(code).toMatchObject({ programId: program.id, partnerId: NORTHSTAR_IDS.partners.jamie, code: "NEWLINE42", active: true });
+    expect(referralCodeSchema.array().parse((await owner.get(path).expect(200)).body)).toContainEqual(code);
+    await owner.post(path).send({ partnerId: NORTHSTAR_IDS.partners.jamie, code: "newline42" }).expect(409);
+    await owner.post(path).send({ partnerId: foreignPartner, code: "FOREIGN42" }).expect(404);
+    await partner.get(path).expect(403);
+  });
+  it("previews the server-selected rule and exact amount before a booking", async () => {
+    const owner = await ownerAgent(app);
+    const partner = await partnerAgent(app);
+    const path = `/programs/${NORTHSTAR_IDS.program}/preview`;
+    const input = { partnerId: NORTHSTAR_IDS.partners.jamie, category: "electrical", grossAmountMinor: "20000" };
+    expect(previewCommissionSchema.parse((await owner.post(path).send(input).expect(201)).body)).toEqual({
+      ruleId: NORTHSTAR_IDS.rules.jamieElectrical,
+      programStatus: "active",
+      scope: "partner_category",
+      amount: { amountMinor: "2400", currency: "USD" },
+    });
+    await partner.post(path).send(input).expect(403);
+    await owner.post(path).send({ ...input, partnerId: foreignPartner }).expect(404);
   });
 });

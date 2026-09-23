@@ -15,7 +15,7 @@ export function OwnerProgramsPage() {
         description="Control which referrals enter the program and how completed work resolves into commission."
       />
       <OwnerNotices />
-      <ProgramRules programs={overview.programs} onChanged={refresh} onNotice={setNotice} />
+      <ProgramRules programs={overview.programs} partners={overview.partners} onChanged={refresh} onNotice={setNotice} />
       <ConversionControls
         mode="lifecycle"
         conversions={conversions}

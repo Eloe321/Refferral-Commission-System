@@ -34,13 +34,15 @@ export class EmailAdapter implements OnApplicationShutdown {
       secure: env.SMTP_SECURE ?? false,
     });
   }
-  async send(message: DeliveryMessage): Promise<{ referenceId: string }> {
+  async send(message: DeliveryMessage & { dedupeKey?: string }): Promise<{ referenceId: string }> {
     if (this.env.EMAIL_DELIVERY_MODE === "disabled") throw new Error("Email delivery unavailable");
     try {
       const result = await this.transport.sendMail({
         from: "Referral Sandbox <no-reply@example.invalid>",
         to: message.recipient,
-        subject: "Your claim verification code",
+        subject: message.dedupeKey?.startsWith("booking-completed:")
+          ? "Your fictional Northstar booking is complete"
+          : "Your claim verification code",
         text: message.content,
       });
       return { referenceId: result.messageId };

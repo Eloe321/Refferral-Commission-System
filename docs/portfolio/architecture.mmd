@@ -1,0 +1,16 @@
+flowchart LR
+  Partner[Partner referral code] --> Booking[Fictional booking]
+  Booking --> Pending[Pending earning]
+  Provider[Service provider event] --> Verify[HMAC and timestamp verification]
+  Verify --> EventLedger[(Event ledger)]
+  EventLedger --> Eligible[Eligible earning]
+  Pending --> Eligible
+  Eligible --> OTP[Preview OTP authorization]
+  OTP --> Claim[Partner claim]
+  Claim --> Settlement[Simulated settlement]
+  Settlement --> Refund[Refund]
+  Refund --> Recovery[Immutable reversal and recovery]
+  EventLedger --> Audit[(Audit trail)]
+  Eligible --> Audit
+  Settlement --> Audit
+  Recovery --> Audit

@@ -44,6 +44,11 @@ const appEnvSchema = z
       nonEmptyString.optional(),
     ),
     UNISMS_WEBHOOK_BODY_LIMIT_BYTES: webhookBodyLimit,
+    BOOKING_WEBHOOK_SECRET: z.preprocess(
+      (value) =>
+        typeof value === "string" && value.trim() === "replace_me" ? undefined : value,
+      z.string().min(32).optional(),
+    ),
     EMAIL_DELIVERY_MODE: z.enum(["mailpit", "smtp", "disabled"]),
     SMTP_HOST: nonEmptyString.optional(),
     SMTP_PORT: port.optional(),

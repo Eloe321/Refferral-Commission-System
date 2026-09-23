@@ -99,6 +99,7 @@ export function OwnerWorkboardPage() {
           </p>
         </div>
         <nav aria-label="Owner work shortcuts">
+          <Link href="/owner/bookings">Create a referred booking</Link>
           <Link href="/owner/programs">Review program controls</Link>
           <Link href="/owner/earnings">Open earning operations</Link>
         </nav>

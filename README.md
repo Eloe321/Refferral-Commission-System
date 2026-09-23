@@ -1,5 +1,7 @@
 # Referral Commission Sandbox
 
+[![CI](https://github.com/Eloe321/Refferral-Commission-System/actions/workflows/ci.yml/badge.svg)](https://github.com/Eloe321/Refferral-Commission-System/actions/workflows/ci.yml)
+
 A mobile-first, local business sandbox for exploring referral attribution, commission rules, OTP-authorized claims, simulated payouts, refunds, and recovery. The sample company and every record are fictional. No signup, paid SMS account, or payment provider is required for the default experience.
 
 ## What the sandbox demonstrates
@@ -110,6 +112,12 @@ Within the same specificity, the newest effective rule wins, followed by a stabl
 
 The selected rule is snapshotted on the earning. Later rule edits affect future earnings, not historical calculations. Service completion makes pending earnings eligible. Cancellation or no-show voids unpaid earnings. A hold records the operator, reason, and timestamps; release derives the correct state from the underlying conversion.
 
+The owner booking page demonstrates a signed `service.completed` event moving a fictional booking's commission into eligibility. It records duplicate and failed events, shows retryable failures, and writes a system audit record for accepted completion. See [Booking completion events](docs/architecture/booking-events.md) for the payload, signature, and demo boundary.
+
+The owner can create programs, assign partner referral codes, add flat or percentage rules by category or partner, and preview a commission using the server's rule selection. The earnings queue explains the selected rule and next action; the reports page shows status, reversal, and partner totals and exports exact minor-unit CSV. A [one-page case study](docs/portfolio/case-study.md), [architecture diagram](docs/portfolio/architecture.mmd), [walkthrough script](docs/portfolio/walkthrough.md), and [starter client offer](docs/portfolio/starter-offer.md) package the sandbox for review.
+
+The current Compose stack is for local use. See [public sandbox deployment readiness](docs/portfolio/deployment-readiness.md) before hosting it.
+
 A settled earning is never edited away after a refund. The API calculates the reversal from the original rule snapshot, appends a negative ledger entry, and applies the outstanding recovery against later claims. See [Domain lifecycle and recovery ledger](docs/architecture/domain-lifecycle.md) for transition tables and formulas.
 
 ## Free preview SMS is the default
@@ -195,10 +203,13 @@ The API container applies migrations, verifies or inserts the deterministic seed
 Local package checks require Node.js 24.15 or newer in the Node 24 line and Corepack:
 
 ```bash
+nvm use
 corepack enable
 pnpm install --frozen-lockfile
 pnpm verify
 ```
+
+The exact reviewed version is in [`.nvmrc`](.nvmrc). CI runs lint, type checks, unit, database integration and API E2E tests, the privacy scan, Chromium journeys, and both Docker builds on pushes and pull requests. Failed browser runs upload screenshots, traces, and an HTML report as a workflow artifact. Dependabot proposes package updates separately from feature work.
 
 `pnpm verify` runs lint, type checks, unit and database tests, API E2E tests, the privacy scan, and real Chromium journeys. The browser command intentionally restarts this Compose project with preview SMS, so do not use it against an unrelated Compose project.
 
@@ -246,6 +257,8 @@ It does not provide:
 - automatic currency conversion or organization-level multi-currency accounting.
 
 Before production use, replace demo sessions and payout simulation, review the threat model, add real identity and authorization, define financial reconciliation, choose compliant providers, implement observability and backup procedures, and obtain legal and accounting review for the target market.
+
+For changes and vulnerability reports, see [Contributing](CONTRIBUTING.md), [Security policy](SECURITY.md), and the [architecture decision log](docs/architecture/decisions/README.md).
 
 ## Adaptation examples
 

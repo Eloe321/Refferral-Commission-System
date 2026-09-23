@@ -48,6 +48,7 @@ export async function createApiTestApp(
         | "UNISMS_SENDER_ID"
         | "UNISMS_WEBHOOK_SECRET"
         | "UNISMS_WEBHOOK_BODY_LIMIT_BYTES"
+        | "BOOKING_WEBHOOK_SECRET"
       >
     >;
   } = {},

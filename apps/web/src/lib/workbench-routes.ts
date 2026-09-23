@@ -10,7 +10,9 @@ export const workbenchRoutes = {
   owner: [
     { label: "Workboard", href: "/owner/workboard", section: "workboard" },
     { label: "Programs", href: "/owner/programs", section: "programs" },
+    { label: "Bookings", href: "/owner/bookings", section: "bookings" },
     { label: "Earnings", href: "/owner/earnings", section: "earnings" },
+    { label: "Reports", href: "/owner/reports", section: "reports" },
     { label: "Partners", href: "/owner/partners", section: "partners" },
   ],
   partner: [

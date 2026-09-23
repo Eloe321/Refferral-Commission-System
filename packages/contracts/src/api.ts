@@ -59,6 +59,29 @@ export const commissionRuleInput = z
         message: "effectiveTo must be after effectiveFrom",
       });
   });
+export const createProgramInput = z.strictObject({ name: z.string().trim().min(3).max(100) });
+export const createReferralCodeInput = z.strictObject({
+  partnerId: uuid,
+  code: z.string().trim().toUpperCase().regex(/^[A-Z0-9_-]{3,40}$/),
+});
+export const referralCodeSchema = z.strictObject({
+  id: uuid,
+  programId: uuid,
+  partnerId: uuid,
+  code: z.string(),
+  active: z.boolean(),
+});
+export const previewCommissionInput = z.strictObject({
+  partnerId: uuid,
+  category,
+  grossAmountMinor: nonnegativeMinorStringSchema,
+});
+export const previewCommissionSchema = z.strictObject({
+  ruleId: uuid.nullable(),
+  programStatus: z.enum(programStatuses),
+  scope: z.enum(["partner_category", "partner", "category", "fallback", "none"]),
+  amount: moneyJsonSchema,
+});
 export const createConversionInput = z.strictObject({
   idempotencyKey: z.string().trim().min(8).max(120),
   externalRef,
@@ -221,6 +244,27 @@ export const earningViewSchema = earningSchema.extend({
   statusExplanation: z.string().min(1),
 });
 export const earningListSchema = z.strictObject({ items: z.array(earningViewSchema) });
+export const bookingWebhookEventSchema = z.strictObject({
+  id: uuid,
+  providerEventId: z.string().min(1).max(120),
+  programId: uuid,
+  bookingRef: externalRef,
+  eventType: z.literal("service.completed"),
+  occurredAt: timestamp,
+  status: z.enum(["pending", "processed", "failed", "ignored"]),
+  failureCode: z.string().nullable(),
+  attempts: z.number().int().nonnegative(),
+  createdAt: timestamp,
+  lastAttemptAt: timestamp.nullable(),
+  processedAt: timestamp.nullable(),
+  confirmationStatus: z.enum(outboxStatuses).nullable(),
+});
+export const bookingWebhookEventListSchema = z.strictObject({
+  items: z.array(bookingWebhookEventSchema),
+});
+export const bookingWebhookReceiptSchema = z.strictObject({
+  status: z.enum(["processed", "duplicate", "failed", "ignored"]),
+});
 export const otpDeliverySchema = z.strictObject({
   ...recordIdentity,
   channel: z.enum(deliveryChannels),
@@ -360,6 +404,11 @@ export const resetSandboxResponseSchema = z.strictObject({
 
 export type DemoSessionInput = z.infer<typeof demoSessionInput>;
 export type CommissionRuleInput = z.infer<typeof commissionRuleInput>;
+export type CreateProgramInput = z.infer<typeof createProgramInput>;
+export type CreateReferralCodeInput = z.infer<typeof createReferralCodeInput>;
+export type ReferralCode = z.infer<typeof referralCodeSchema>;
+export type PreviewCommissionInput = z.infer<typeof previewCommissionInput>;
+export type PreviewCommission = z.infer<typeof previewCommissionSchema>;
 export type CreateConversionInput = z.infer<typeof createConversionInput>;
 export type ReasonInput = z.infer<typeof reasonInput>;
 export type RefundInput = z.infer<typeof refundInput>;
@@ -375,6 +424,8 @@ export type Conversion = z.infer<typeof conversionSchema>;
 export type ConversionItem = z.infer<typeof conversionItemSchema>;
 export type Earning = z.infer<typeof earningSchema>;
 export type EarningView = z.infer<typeof earningViewSchema>;
+export type BookingWebhookEvent = z.infer<typeof bookingWebhookEventSchema>;
+export type BookingWebhookReceipt = z.infer<typeof bookingWebhookReceiptSchema>;
 export type EarningHold = z.infer<typeof earningHoldSchema>;
 export type OtpDelivery = z.infer<typeof otpDeliverySchema>;
 export type Claim = z.infer<typeof claimSchema>;

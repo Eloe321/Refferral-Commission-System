@@ -1,8 +1,18 @@
 import {
   claimSchema,
   claimListSchema,
+  bookingWebhookEventListSchema,
+  bookingWebhookReceiptSchema,
+  commissionRuleInput,
+  commissionRuleSchema,
+  createProgramInput,
+  createReferralCodeInput,
+  referralCodeSchema,
+  previewCommissionInput,
+  previewCommissionSchema,
   challengeDeliverySchema,
   conversionSchema,
+  createConversionInput,
   createClaimInput,
   createOtpChallengeInput,
   demoSessionInput,
@@ -27,6 +37,16 @@ import {
   type ActorRole,
   type Claim,
   type Conversion,
+  type CreateConversionInput,
+  type BookingWebhookEvent,
+  type BookingWebhookReceipt,
+  type CommissionRule,
+  type CommissionRuleInput,
+  type CreateProgramInput,
+  type CreateReferralCodeInput,
+  type ReferralCode,
+  type PreviewCommission,
+  type PreviewCommissionInput,
   type DemoSession,
   type EarningView,
   type OwnerClaim,
@@ -47,6 +67,33 @@ export type OwnerOverview = {
   partners: PartnerDetail[];
   claims: OwnerClaim[];
 };
+
+export async function getBookingWebhookEvents(): Promise<BookingWebhookEvent[]> {
+  return (await requestJson("/webhooks/bookings/events", bookingWebhookEventListSchema)).items;
+}
+
+export async function retryBookingWebhookEvent(id: string): Promise<BookingWebhookReceipt> {
+  return requestJson(`/webhooks/bookings/events/${encodeURIComponent(id)}/retry`, bookingWebhookReceiptSchema, {
+    method: "POST",
+    headers: mutationHeaders(),
+    body: JSON.stringify({}),
+  });
+}
+
+export async function deliverDemoBookingCompletion(conversionId: string): Promise<BookingWebhookReceipt> {
+  return requestJson(`/webhooks/bookings/demo/${conversionId}/complete`, bookingWebhookReceiptSchema, {
+    method: "POST",
+    headers: mutationHeaders(),
+    body: JSON.stringify({}),
+  });
+}
+
+export async function createBookingConversion(input: CreateConversionInput): Promise<Conversion> {
+  return requestJson("/conversions", conversionSchema, {
+    method: "POST",
+    body: JSON.stringify(createConversionInput.parse(input)),
+  });
+}
 
 export type PartnerOverview = {
   partner: PartnerDetail;
@@ -284,6 +331,46 @@ export async function changeProgramState(
     method: "POST",
     headers: mutationHeaders(),
     body: JSON.stringify(input),
+  });
+}
+
+export async function createCommissionRule(
+  programId: string,
+  input: CommissionRuleInput,
+): Promise<CommissionRule[]> {
+  const body = commissionRuleInput.parse(input);
+  return requestJson(`/programs/${programId}/rules`, z.array(commissionRuleSchema), {
+    method: "POST",
+    headers: mutationHeaders(),
+    body: JSON.stringify(body),
+  });
+}
+
+export async function createCommissionProgram(input: CreateProgramInput): Promise<Program> {
+  return requestJson("/programs", programSchema, {
+    method: "POST",
+    headers: mutationHeaders(),
+    body: JSON.stringify(createProgramInput.parse(input)),
+  });
+}
+
+export async function getReferralCodes(programId: string): Promise<ReferralCode[]> {
+  return requestJson(`/programs/${programId}/codes`, z.array(referralCodeSchema));
+}
+
+export async function createReferralCode(programId: string, input: CreateReferralCodeInput): Promise<ReferralCode> {
+  return requestJson(`/programs/${programId}/codes`, referralCodeSchema, {
+    method: "POST",
+    headers: mutationHeaders(),
+    body: JSON.stringify(createReferralCodeInput.parse(input)),
+  });
+}
+
+export async function previewCommission(programId: string, input: PreviewCommissionInput): Promise<PreviewCommission> {
+  return requestJson(`/programs/${programId}/preview`, previewCommissionSchema, {
+    method: "POST",
+    headers: mutationHeaders(),
+    body: JSON.stringify(previewCommissionInput.parse(input)),
   });
 }
 

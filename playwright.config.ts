@@ -8,7 +8,8 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  reporter: [["list"]],
+  reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
+  outputDir: "test-results",
   use: {
     ...devices["Desktop Chrome"],
     baseURL: "http://localhost:3000",
