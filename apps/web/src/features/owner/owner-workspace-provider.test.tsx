@@ -178,6 +178,7 @@ function installOverview(state: FixtureState, earningReads?: { count: number }) 
   };
   server.use(
     http.get("*/api/programs", () => HttpResponse.json([state.program])),
+    http.get("*/api/programs/:id/codes", () => HttpResponse.json([])),
     http.get("*/api/earnings", () => {
       if (earningReads) earningReads.count += 1;
       return HttpResponse.json(earningListSchema.parse({ items: state.earnings }));
@@ -257,11 +258,11 @@ describe("OwnerWorkspaceProvider and owner pages", () => {
         <RefreshRecords />
       </>,
     );
-    expect(await screen.findByText("Neighbor Rewards")).toBeVisible();
+    expect(await screen.findByRole("heading", { name: "Neighbor Rewards" })).toBeVisible();
     server.use(http.get("*/api/earnings", () => HttpResponse.json({}, { status: 503 })));
     await userEvent.setup().click(screen.getByRole("button", { name: "Refresh records" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(/last successful records/i);
-    expect(screen.getByText("Neighbor Rewards")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Neighbor Rewards" })).toBeVisible();
   });
 
   it("reloads earnings after the guide publishes a completed-service workspace", async () => {
@@ -270,7 +271,7 @@ describe("OwnerWorkspaceProvider and owner pages", () => {
     const reads = { count: 0 };
     installOverview(state, reads);
     const view = renderOwner(<OwnerProgramsPage />);
-    await screen.findByText("Neighbor Rewards");
+    await screen.findByRole("heading", { name: "Neighbor Rewards" });
     expect(reads.count).toBe(1);
 
     state.earnings = [earning];

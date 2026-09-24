@@ -3,7 +3,7 @@ import type { NestExpressApplication } from "@nestjs/platform-express";
 import { fileURLToPath } from "node:url";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { json, urlencoded, type NextFunction, type Request, type Response } from "express";
+import { json, raw, urlencoded, type NextFunction, type Request, type Response } from "express";
 import { AppModule } from "./app.module.js";
 import { parseEnv, type AppEnv } from "./config/env.js";
 
@@ -15,6 +15,7 @@ export async function createApiApp(env: AppEnv): Promise<NestExpressApplication>
     logger: env.APP_MODE === "production" ? ["error", "warn"] : ["error", "warn", "log"],
   });
   app.use("/webhooks/unisms", json({ limit: env.UNISMS_WEBHOOK_BODY_LIMIT_BYTES, strict: true }));
+  app.use("/webhooks/bookings", raw({ type: "application/json", limit: "16kb" }));
   app.use(json({ limit: "100kb", strict: true }));
   app.use(urlencoded({ extended: true, limit: "100kb" }));
   app.use(

@@ -149,8 +149,9 @@ it.each(["legacy", "fresh"] as const)(
       const migrations = await db.sql<
         { created_at: string }[]
       >`select created_at::text from drizzle.__drizzle_migrations order by created_at`;
-      expect(migrations).toHaveLength(8);
+      expect(migrations).toHaveLength(9);
       expect(migrations[0]?.created_at).toBe("1789479471419");
+      expect(await db.sql`select to_regclass('public.booking_webhook_events') as table_name`).toEqual([{ table_name: "booking_webhook_events" }]);
       if (mode === "legacy")
         expect(await db.sql`select * from organizations where id=${preservedId}`).toEqual(before);
       if (legacyAllocation) {

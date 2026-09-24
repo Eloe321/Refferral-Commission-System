@@ -4,6 +4,8 @@ import type { ActorRole } from "@referral-sandbox/contracts";
 import {
   BadgeDollarSign,
   BriefcaseBusiness,
+  CalendarDays,
+  ChartNoAxesCombined,
   ClipboardList,
   HandCoins,
   UsersRound,
@@ -17,7 +19,9 @@ const icons: Record<ActorRole, Record<string, LucideIcon>> = {
   owner: {
     workboard: BriefcaseBusiness,
     programs: ClipboardList,
+    bookings: CalendarDays,
     earnings: BadgeDollarSign,
+    reports: ChartNoAxesCombined,
     partners: UsersRound,
   },
   partner: {
@@ -31,7 +35,7 @@ const icons: Record<ActorRole, Record<string, LucideIcon>> = {
 export function MobileNav({ role, pathname }: { role: ActorRole; pathname: string }) {
   const activeHref = activeWorkbenchDestination(role, pathname);
   return (
-    <nav className="primary-navigation" aria-label="Primary navigation">
+    <nav className={`primary-navigation primary-navigation--${role}`} aria-label="Primary navigation">
       <p className="navigation-kicker" aria-hidden="true">
         {role === "owner" ? "Owner console" : "Partner console"}
       </p>

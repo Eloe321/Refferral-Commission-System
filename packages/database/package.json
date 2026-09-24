@@ -18,10 +18,10 @@
     "db:seed": "tsx src/seed.ts"
   },
   "dependencies": {
-    "drizzle-orm": "latest",
-    "postgres": "latest"
+    "drizzle-orm": "0.45.2",
+    "postgres": "3.4.9"
   },
   "devDependencies": {
-    "drizzle-kit": "latest"
+    "drizzle-kit": "0.31.10"
   }
 }

@@ -1,4 +1,4 @@
-FROM node:24-alpine AS dependencies
+FROM node:24.15.0-alpine AS dependencies
 
 RUN corepack enable
 WORKDIR /workspace
@@ -20,7 +20,7 @@ COPY packages/database packages/database
 RUN pnpm --filter @referral-sandbox/api build \
   && pnpm --filter @referral-sandbox/api deploy --prod --legacy /opt/api
 
-FROM node:24-alpine AS runtime
+FROM node:24.15.0-alpine AS runtime
 
 RUN corepack enable
 ENV NODE_ENV=production

@@ -13,6 +13,7 @@ import { ProgramsModule } from "./programs/programs.module.js";
 import { PartnersModule } from "./partners/partners.module.js";
 import { OtpModule } from "./otp/otp.module.js";
 import { ClaimsModule } from "./claims/claims.module.js";
+import { BookingsModule } from "./bookings/bookings.module.js";
 
 @Module({})
 export class AppModule {
@@ -29,6 +30,7 @@ export class AppModule {
         PartnersModule,
         OtpModule,
         ClaimsModule,
+        BookingsModule,
       ],
       controllers: [HealthController],
       providers: [{ provide: APP_GUARD, useClass: SandboxSessionGuard }],

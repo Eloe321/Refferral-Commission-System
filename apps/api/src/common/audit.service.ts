@@ -23,4 +23,9 @@ export class AuditService {
       values (${actor.organizationId},${input.eventKey},${actor.actorId},false,${input.action},${input.reason ?? null},${input.aggregateType},${input.aggregateId},${JSON.stringify(input.metadata ?? {})}::jsonb,statement_timestamp())
       on conflict (organization_id,event_key) do nothing`;
   }
+  async appendSystem(sql: Sql, organizationId: string, input: AuditInput): Promise<void> {
+    await sql`insert into audit_events (organization_id,event_key,actor_id,is_system_event,action,reason,aggregate_type,aggregate_id,metadata,created_at)
+      values (${organizationId},${input.eventKey},null,true,${input.action},${input.reason ?? null},${input.aggregateType},${input.aggregateId},${JSON.stringify(input.metadata ?? {})}::jsonb,statement_timestamp())
+      on conflict (organization_id,event_key) do nothing`;
+  }
 }

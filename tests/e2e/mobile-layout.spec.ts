@@ -82,14 +82,16 @@ test.describe("mobile workboard accessibility", () => {
     await expect(page.getByRole("heading", { name: "Partner access", level: 1 })).toBeVisible();
   });
 
-  test("all eight deep links fit 320 pixels and representative owner and partner pages survive refresh", async ({
+  test("all ten deep links fit 320 pixels and representative owner and partner pages survive refresh", async ({
     page,
   }) => {
     await resetSandbox(page);
     const routes = [
       ["/owner/workboard", "Owner workboard"],
       ["/owner/programs", "Programs and attribution"],
+      ["/owner/bookings", "Bookings and events"],
       ["/owner/earnings", "Earnings and settlement"],
+      ["/owner/reports", "Commission exposure"],
       ["/owner/partners", "Partner access"],
       ["/partner/workboard", "Partner workboard · Jamie"],
       ["/partner/referrals", "Referrals"],

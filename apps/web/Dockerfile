@@ -1,4 +1,4 @@
-FROM node:24-alpine AS dependencies
+FROM node:24.15.0-alpine AS dependencies
 
 RUN corepack enable
 WORKDIR /workspace
@@ -24,7 +24,7 @@ COPY packages/contracts packages/contracts
 COPY packages/ui packages/ui
 RUN pnpm --filter @referral-sandbox/web build
 
-FROM node:24-alpine AS runtime
+FROM node:24.15.0-alpine AS runtime
 
 ENV NODE_ENV=production
 ENV PORT=3000

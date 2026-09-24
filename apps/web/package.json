@@ -10,20 +10,20 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "@fontsource/barlow-condensed": "latest",
-    "@fontsource/manrope": "latest",
-    "@radix-ui/react-dropdown-menu": "latest",
+    "@fontsource/barlow-condensed": "5.3.0",
+    "@fontsource/manrope": "5.3.0",
+    "@radix-ui/react-dropdown-menu": "2.1.24",
     "@referral-sandbox/contracts": "workspace:*",
     "@referral-sandbox/ui": "workspace:*",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-qr-code": "latest",
-    "lucide-react": "latest",
-    "zod": "latest"
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-qr-code": "2.2.0",
+    "lucide-react": "1.46.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "latest",
-    "tailwindcss": "latest"
+    "@tailwindcss/postcss": "4.3.3",
+    "tailwindcss": "4.3.3"
   }
 }
