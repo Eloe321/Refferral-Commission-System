@@ -13,9 +13,7 @@ RUN pnpm install --frozen-lockfile
 
 FROM dependencies AS build
 
-ARG API_PROXY_TARGET=http://api:4000
 ARG NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
-ENV API_PROXY_TARGET=$API_PROXY_TARGET
 ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 
 COPY tsconfig.base.json ./
@@ -31,10 +29,10 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 WORKDIR /app
 
-COPY --from=build --chown=node:node /workspace/apps/web/.next/standalone ./
-COPY --from=build --chown=node:node /workspace/apps/web/.next/static ./apps/web/.next/static
+COPY --from=build --chown=node:node /workspace/apps/web/out ./out
+COPY --from=build --chown=node:node /workspace/apps/web/static-server.mjs ./static-server.mjs
 
 USER node
 EXPOSE 3000
 
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "static-server.mjs"]

@@ -14,6 +14,9 @@ export async function createApiApp(env: AppEnv): Promise<NestExpressApplication>
     bodyParser: false,
     logger: env.APP_MODE === "production" ? ["error", "warn"] : ["error", "warn", "log"],
   });
+  // Railway terminates TLS before forwarding requests to this container. Trust its
+  // single proxy hop so request.secure reflects the original HTTPS connection.
+  app.set("trust proxy", 1);
   app.use("/webhooks/unisms", json({ limit: env.UNISMS_WEBHOOK_BODY_LIMIT_BYTES, strict: true }));
   app.use("/webhooks/bookings", raw({ type: "application/json", limit: "16kb" }));
   app.use(json({ limit: "100kb", strict: true }));

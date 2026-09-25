@@ -20,7 +20,7 @@ The booking provider event has a five-minute timestamp window, HMAC-SHA256 signa
 
 ## Evidence
 
-The repository has lint, type, unit, database integration, API E2E, privacy, browser, and Docker build checks in GitHub Actions. Browser journeys exercise the owner and partner flows. See the [booking event specification](../architecture/booking-events.md), [architecture diagram](architecture.mmd), and [walkthrough](walkthrough.md).
+The repository has lint, type, unit, database integration, API E2E, privacy, browser, and Docker build checks in GitHub Actions. Browser journeys exercise the owner and partner flows. Review the [live sandbox](https://referral-commission-system.pages.dev), [booking event specification](../architecture/booking-events.md), [architecture diagram](architecture.mmd), and [walkthrough](walkthrough.md).
 
 ## Boundary
 

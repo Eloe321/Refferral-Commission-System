@@ -201,10 +201,10 @@ importers:
         specifier: 1.46.0
         version: 1.46.0(react@19.3.0)
       react:
-        specifier: '*'
+        specifier: 19.3.0
         version: 19.3.0
       react-dom:
-        specifier: '*'
+        specifier: 19.3.0
         version: 19.3.0(react@19.3.0)
       tailwind-merge:
         specifier: 3.7.0

@@ -1,14 +1,19 @@
-# Public sandbox deployment readiness
+# Public sandbox deployment
 
-The Docker Compose stack is a **local demo**. Its default database password, fallback session secrets, open ports, shared demo state, and Mailpit inbox make it unsuitable for direct public exposure. The repository currently has no public deployment URL.
+The sandbox is publicly available at [referral-commission-system.pages.dev](https://referral-commission-system.pages.dev). Its Railway API has a separate [health endpoint](https://refferral-commission-system-production.up.railway.app/health).
 
-Before publishing a hosted sandbox:
+Cloudflare Pages serves the static Next.js workbench. Its same-origin `/api/*` function forwards browser requests to Railway, so the signed sandbox cookie stays first-party in the browser. Railway terminates the API's HTTPS traffic; the API trusts that one proxy hop and adds the `Secure` cookie attribute for HTTPS requests.
 
-1. Choose a host that supports the Next.js web service, NestJS API, managed PostgreSQL, private service networking, and HTTPS.
-2. Set unique session, OTP HMAC, and booking webhook secrets in the host's secret manager. Set `WEB_ORIGIN` and API proxy destinations to the actual HTTPS origins.
-3. Keep `APP_MODE=sandbox`, `SMS_DELIVERY_MODE=preview`, and `EMAIL_DELIVERY_MODE=disabled` unless a private test inbox is available. Never expose Mailpit or PostgreSQL to the public internet.
-4. Use fictional seed data only. Treat the reset endpoint and shared demo database as a concurrency concern: either isolate visitor state or protect resets with an operator-controlled reset schedule before inviting public traffic.
-5. Put rate limits and resource quotas on session creation, booking events, claims, and reset. Monitor service health, event failures, outbox failures, and database size.
-6. Run the CI checks, migrate the managed database, verify the browser journey on the hosted URL, and publish screenshots that show the sandbox and simulated-payment labels.
+## Demo boundary
 
-The application must continue to say that money movement is simulated. Real identity, payment reconciliation, tax, KYC, backups, monitoring, and legal review are separate production work.
+This is a shared, resettable sandbox. It contains only deterministic fictional data and simulated money movement. The app must continue to use `APP_MODE=sandbox`; SMS must remain in preview mode; email must remain disabled or use a private test inbox. Mailpit and PostgreSQL must never be public services.
+
+The Docker Compose stack remains a **local demo**. Its default database password, fallback session secrets, open ports, shared demo state, and Mailpit inbox make it unsuitable for direct public exposure.
+
+## Before adapting it for a real business
+
+1. Set unique session, OTP HMAC, and booking-webhook secrets in managed secret storage. Set `WEB_ORIGIN` and the Pages API origin to the real HTTPS domains.
+2. Isolate tenant and visitor state, or protect reset operations with an operator-controlled schedule before inviting public traffic.
+3. Put rate limits and resource quotas on session creation, booking events, claims, and resets. Monitor service health, event failures, outbox failures, and database size.
+4. Run CI, migrate the managed database, verify the browser journey at the hosted URL, and publish screenshots that show the sandbox and simulated-payment labels.
+5. Add identity, payment reconciliation, tax, KYC, backup, monitoring, incident response, and legal review before handling real people or money.
