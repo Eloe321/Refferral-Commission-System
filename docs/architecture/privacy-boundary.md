@@ -130,7 +130,7 @@ Do not add copied logos, screenshots, fonts, exports, or other binaries from a p
 
 ## Production limitations
 
-The sandbox cookie is not production authentication. Persona IDs are deterministic. Cookies set `secure: false` for localhost. The project does not implement identity proofing, MFA recovery, KYC, tax handling, payout accounts, compliance, fraud operations, backup policy, secret rotation, production deployment, or incident response.
+The sandbox cookie is not production authentication. Persona IDs are deterministic. Session cookies use the `Secure` attribute for HTTPS requests and omit it only for local HTTP development. The project does not implement identity proofing, MFA recovery, KYC, tax handling, payout accounts, compliance, fraud operations, backup policy, secret rotation, or incident response.
 
 Before adapting the code to real people or money:
 

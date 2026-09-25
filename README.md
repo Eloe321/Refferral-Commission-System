@@ -4,6 +4,10 @@
 
 A mobile-first, local business sandbox for exploring referral attribution, commission rules, OTP-authorized claims, simulated payouts, refunds, and recovery. The sample company and every record are fictional. No signup, paid SMS account, or payment provider is required for the default experience.
 
+## Live sandbox
+
+Open the [public sandbox](https://referral-commission-system.pages.dev) or its [API health check](https://refferral-commission-system-production.up.railway.app/health). The public instance is a shared, resettable demonstration with fictional data and simulated money movement.
+
 ## What the sandbox demonstrates
 
 The sandbox lets a business owner and a referral partner inspect the same lifecycle from different permissions:
@@ -116,7 +120,7 @@ The owner booking page demonstrates a signed `service.completed` event moving a 
 
 The owner can create programs, assign partner referral codes, add flat or percentage rules by category or partner, and preview a commission using the server's rule selection. The earnings queue explains the selected rule and next action; the reports page shows status, reversal, and partner totals and exports exact minor-unit CSV. A [one-page case study](docs/portfolio/case-study.md), [architecture diagram](docs/portfolio/architecture.mmd), [walkthrough script](docs/portfolio/walkthrough.md), and [starter client offer](docs/portfolio/starter-offer.md) package the sandbox for review.
 
-The current Compose stack is for local use. See [public sandbox deployment readiness](docs/portfolio/deployment-readiness.md) before hosting it.
+The current Compose stack is for local use. See [public sandbox deployment details](docs/portfolio/deployment-readiness.md) for the hosted demo and the safeguards required before adapting it to a real business.
 
 A settled earning is never edited away after a refund. The API calculates the reversal from the original rule snapshot, appends a negative ledger entry, and applies the outstanding recovery against later claims. See [Domain lifecycle and recovery ledger](docs/architecture/domain-lifecycle.md) for transition tables and formulas.
 

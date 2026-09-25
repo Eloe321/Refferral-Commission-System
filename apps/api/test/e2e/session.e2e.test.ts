@@ -35,7 +35,7 @@ describe("sandbox session", () => {
     });
   });
 
-  it("sets a secure browser session cookie", async () => {
+  it("sets an HTTP-only, Lax browser session cookie", async () => {
     const response = await app.request
       .post("/demo/session")
       .send({ role: "partner", actorId: NORTHSTAR_IDS.partnerUsers.jamie })
@@ -43,6 +43,16 @@ describe("sandbox session", () => {
 
     expect(response.headers["set-cookie"]?.[0]).toMatch(/HttpOnly/i);
     expect(response.headers["set-cookie"]?.[0]).toMatch(/SameSite=Lax/i);
+  });
+
+  it("marks the session cookie Secure when the original request is HTTPS", async () => {
+    const response = await app.request
+      .post("/demo/session")
+      .set("X-Forwarded-Proto", "https")
+      .send({ role: "partner", actorId: NORTHSTAR_IDS.partnerUsers.jamie })
+      .expect(201);
+
+    expect(response.headers["set-cookie"]?.[0]).toMatch(/Secure/i);
   });
 
   it("rejects a role mismatch without trusting the caller", async () => {

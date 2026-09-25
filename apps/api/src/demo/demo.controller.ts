@@ -30,16 +30,22 @@ type CookieResponse = {
   cookie(name: string, value: string, options: Record<string, unknown>): void;
 };
 type StatusResponse = { status(code: number): StatusResponse };
+type CookieRequest = { secure: boolean };
 
 @Controller("demo")
 export class DemoController {
   constructor(@Inject(DemoService) private readonly demo: DemoService) {}
 
-  private setCookie(response: CookieResponse, value: string, expiresAt: number): void {
+  private setCookie(
+    response: CookieResponse,
+    value: string,
+    expiresAt: number,
+    secure: boolean,
+  ): void {
     response.cookie(SESSION_COOKIE_NAME, value, {
       httpOnly: true,
       sameSite: "lax",
-      secure: false,
+      secure,
       maxAge: expiresAt - Date.now(),
       path: "/",
     });
@@ -50,9 +56,10 @@ export class DemoController {
   async create(
     @Body(new ZodValidationPipe(demoSessionInput)) input: DemoSessionInput,
     @Res({ passthrough: true }) response: CookieResponse,
+    @Req() request: CookieRequest,
   ) {
     const session = await this.demo.createSession(input);
-    this.setCookie(response, session.value, session.expiresAt);
+    this.setCookie(response, session.value, session.expiresAt, request.secure);
     return this.demo.readSession(session.actor);
   }
 
@@ -100,9 +107,10 @@ export class DemoController {
     @CurrentActor() actor: Actor,
     @Body(new ZodValidationPipe(resetSandboxInput)) input: ResetSandboxInput,
     @Res({ passthrough: true }) response: CookieResponse,
+    @Req() request: CookieRequest,
   ) {
     const reset = await this.demo.reset(actor, input);
-    this.setCookie(response, reset.value, reset.expiresAt);
+    this.setCookie(response, reset.value, reset.expiresAt, request.secure);
     return reset.response;
   }
 }
